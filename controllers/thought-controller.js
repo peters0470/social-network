@@ -32,7 +32,6 @@ const thoughtController = {
       .then(({ _id }) => {
         return User.findOneAndUpdate(
           { _id: body.userId },
-          //push to add to array
           { $push: { thoughts: _id } },
           { new: true }
         );
@@ -51,7 +50,7 @@ const thoughtController = {
     Thought.findOneAndUpdate(
       { _id: params.thoughtId },
       { $set: body },
-      {  new: true }
+      {  new: true, runValidators: true }
     )
       .then((updateThought) => {
         if (!updateThought) {
@@ -64,6 +63,16 @@ const thoughtController = {
 
   deleteThought({ params }, res) {
     Thought.findOneAndDelete({ _id: params.thoughtId })
+    .then(deletedThought => {
+      if (!deletedThought) {
+        return res.status(404).json({ message: 'No thought with this id!' });
+      }
+      return User.findOneAndUpdate(
+        { thoughts: params.thoughtId },
+        { $pull: { thoughts: params.thoughtId } },
+        { new: true }
+      );
+      })
       .then(dbUserData => {
         if (!dbUserData) {
           res.status(404).json({ message: 'No thought found with this id!' });

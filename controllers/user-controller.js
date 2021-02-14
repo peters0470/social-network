@@ -73,15 +73,15 @@ const userController = {
     },
 
     removefromFriendList({ params }, res) {
-        User.findOneAndDelete({  _id: params.friendId })
+        User.findOneAndDelete({  _id: params.userId })
             .then(deletedFriend => {
                 if (!deletedFriend) {
                     return res.status(404).json({ message: 'No friend with this id!'  });
                 }
                 return User.findOneAndUpdate(
-                    { friends: params.friendId}, 
-                    { $pull: { friends: params.friendId }}, 
-                    { new: true}
+                    { friends: params.friendId }, 
+                    { $pull: { friends: { friendId: params.friendId }}}, 
+                    { new: true,  runValidators: true}
                 );
             })
             .then(dbUserData => {

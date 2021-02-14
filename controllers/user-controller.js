@@ -19,8 +19,7 @@ const userController = {
             });
     },
 
-    createUser( {body }, res) {
-        console.log( body)
+    createUser( {body }, res) {  
         User.create(body)
             .then(dbUserData => res.json(dbUserData))
             .catch(err => res.status(400).json(err));
@@ -72,29 +71,22 @@ const userController = {
             });
     },
 
-    removefromFriendList({ params }, res) {
-        User.findOneAndDelete({  _id: params.userId })
-            .then(deletedFriend => {
-                if (!deletedFriend) {
-                    return res.status(404).json({ message: 'No friend with this id!'  });
-                }
-                return User.findOneAndUpdate(
-                    { friends: params.friendId }, 
-                    { $pull: { friends: { friendId: params.friendId }}}, 
-                    { new: true,  runValidators: true}
-                );
-            })
-            .then(dbUserData => {
-                if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with this id!'  });
-                    return;
-                }
-                res.json(dbUserData);
-            })
-            .catch(err => res.json(err));
-    },    
+    removeFriend(req, res) {
+        User.findOneAndUpdate({ _id: req.params.userId }, { $pull: { friends: req.params.friendId } }, { new: true })
+          .then((dbUserData) => {
+            if (!dbUserData) {
+              return res.status(404).json({ message: 'No user with this id!' });
+            }
+            res.json(dbUserData);
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+          });
+      },
+    };
+   
 
-};
 
 
     module.exports = userController

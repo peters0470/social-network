@@ -11,7 +11,7 @@ const thoughtController = {
   },
 
   getThoughtById({ params }, res) {
-    Thought.findOne({ _id: params.id })
+    Thought.findOne({ _id: params.thoughtId })
       .then((dbThoughtData) => {
         if (!dbThoughtData) {
           res.status(404).json({

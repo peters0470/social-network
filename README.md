@@ -16,7 +16,7 @@
   A social media startup with an API that uses a NoSQL database
 
   ## Images:
-  
+  Watch the video demo here https://drive.google.com/file/d/13TrmjqvtGZ7HryCVh3Zi6sHUsm6u7zu3/view
 
   ## Installation Instructions: 
   Clone the repository to your computer. Run npm install in the root of the folders terminal. Test various API's
